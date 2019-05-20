@@ -10,4 +10,4 @@ class Account extends Entity {
     }
     
    }
-Entity.URL = '/account/';
+Entity.URL = '/account';

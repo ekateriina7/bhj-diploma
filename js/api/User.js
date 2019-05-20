@@ -91,5 +91,7 @@ class User {
    * Производит выход из приложения. После успешного
    * выхода необходимо вызвать метод User.unsetCurrent
    * */
-  static logout(data, callback = f => f) {}
+  static logout(data, callback = f => f) {
+    
+  }
 }
