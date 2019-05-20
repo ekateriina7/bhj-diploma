@@ -11,6 +11,12 @@ class TransactionsPage {
    * через registerEvents()
    * */
   constructor( element ) {
+    if(element) {
+      this.element = element;
+    } else {
+      console.error('error');
+    }
+    this.registerEvents()
 
   }
 
@@ -18,6 +24,7 @@ class TransactionsPage {
    * Вызывает метод render для отрисовки страницы
    * */
   update() {
+    this.render()
 
   }
 
@@ -28,6 +35,12 @@ class TransactionsPage {
    * TransactionsPage.removeAccount соответственно
    * */
   registerEvents() {
+    const remove_transaction_button = document.querySelectorAll('.transaction__remove');
+    const remove_account_button = document.querySelector('.remove-account');
+    for (let button of remove_transaction_button) {
+      button.addEventListener('click', this.removeTransaction(button.dataset.id));
+    }
+    remove_account_button.addEventListener('click', this.removeAccount())
 
   }
 
@@ -40,7 +53,15 @@ class TransactionsPage {
    * для обновления приложения
    * */
   removeAccount() {
-
+    if(this.lastOptions) {
+      confirm ('Вы действительно хотите удалить счёт?');
+      if (confirm === true) {
+        Account.remove();
+        this.clear();
+        App.update()
+      }
+      
+    }
   }
 
   /**
@@ -49,6 +70,10 @@ class TransactionsPage {
    * По удалению транзакции вызовите метод App.update()
    * */
   removeTransaction( id ) {
+    if(confirm('Вы действительно хотите удалить эту транзакцию?')) {
+      Transaction.remove(id);
+      App.update()
+    }
 
   }
 
@@ -59,6 +84,19 @@ class TransactionsPage {
    * в TransactionsPage.renderTransactions()
    * */
   render( options ) {
+    if(options) {
+      this.options = lastOptions;
+      const data = Account.get();
+      const list = Transaction.list({}, (err, res) => {
+        if(res) {
+          this.renderTransactions();
+        }
+      });
+      if(data) {
+        this.renderTitle(data.name);
+      }
+    }
+
 
   }
 
@@ -68,6 +106,8 @@ class TransactionsPage {
    * Устанавливает заголовок: «Название счёта»
    * */
   clear() {
+    //this.renderTransaction([]);
+    this.renderTitle('Название счёта')
 
   }
 
@@ -75,6 +115,8 @@ class TransactionsPage {
    * Устанавливает заголовок в элемент .content-title
    * */
   renderTitle( name ) {
+    const content_title = document.querySelector('.content-title');
+    content_title.innerHTML = name;
 
   }
 
@@ -83,6 +125,7 @@ class TransactionsPage {
    * в формат «10 марта 2019 г. в 03:20»
    * */
   formatDate( date ) {
+    
 
   }
 

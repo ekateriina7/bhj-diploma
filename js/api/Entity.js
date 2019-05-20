@@ -11,7 +11,9 @@ class Entity {
    * (в зависимости от того, что наследуется от Entity)
    * */
   static list( data, callback = f => f ) {
-
+    let options = data
+    options.url = Entity.HOST + Entity.URL
+    createRequest(options, callback);
   }
 
   /**
@@ -20,7 +22,9 @@ class Entity {
    * что наследуется от Entity)
    * */
   static create( data, callback = f => f ) {
-
+    let options = data
+    options.url = Entity.HOST + Entity.URL
+    createRequest(options, callback);
   }
 
   /**
@@ -28,6 +32,9 @@ class Entity {
    * (в зависимости от того, что наследуется от Entity)
    * */
   static get( id = '', data, callback = f => f ) {
+    let options = data
+    options.url = Entity.HOST + Entity.URL+"/"+id
+    createRequest(options, callback);
 
   }
 
@@ -36,7 +43,9 @@ class Entity {
    * (в зависимости от того, что наследуется от Entity)
    * */
   static update( id = '', data, callback = f => f ) {
-
+    let options = data
+    options.url = Entity.HOST + Entity.URL+"/"+id
+    createRequest(options, callback);
   }
 
   /**
@@ -44,7 +53,10 @@ class Entity {
    * (в зависимости от того, что наследуется от Entity)
    * */
   static remove( id = '', data, callback = f => f ) {
-
+    let options = data
+    options.url = Entity.HOST + Entity.URL+"/"+id
+    createRequest(options, callback);
   }
 }
-
+Entity.URL = '';
+Entity.HOST = 'http://bhj-diploma.u-w.me';

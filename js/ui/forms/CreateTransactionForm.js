@@ -9,6 +9,8 @@ class CreateTransactionForm {
    * метод renderAccountsList
    * */
   constructor( element ) {
+    this.element = element;
+    this.renderAccountsList()
 
   }
 
@@ -21,6 +23,7 @@ class CreateTransactionForm {
    * Обновляет в форме всплывающего окна выпадающий список
    * */
   renderAccountsList() {
+    
 
   }
 

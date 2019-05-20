@@ -9,8 +9,8 @@ class User {
    * Устанавливает текущего пользователя в
    * локальном хранилище.
    * */
-  static setCurrent(user) {
-
+  static setCurrent(data) {
+    localStorage.setItem("user", JSON.stringify(data.user));
   }
 
   /**
@@ -18,7 +18,7 @@ class User {
    * пользователе из локального хранилища.
    * */
   static unsetCurrent() {
-
+    localStorage.removeItem('user');
   }
 
   /**
@@ -26,15 +26,26 @@ class User {
    * из локального хранилища
    * */
   static current() {
-
+    try {
+      return JSON.parse(localStorage.getItem("user"));
+    } catch (e) {
+      return null;
+    }
   }
 
   /**
    * Получает информацию о текущем
    * авторизованном пользователе.
    * */
-  static fetch( data, callback = f => f ) {
-
+  static fetch(data, callback = f => f) {
+    let testrequest = {
+      url: "http://bhj-diploma.u-w.me/user/current",
+      method: "GET",
+    };
+    let response = createRequest(testrequest, function(response){
+      User.setCurrent(response);
+      callback(response);
+    });
   }
 
   /**
@@ -43,8 +54,16 @@ class User {
    * сохранить пользователя через метод
    * User.setCurrent.
    * */
-  static login( data, callback = f => f ) {
-
+  static login(data, callback = f => f) {
+    let testrequest = {
+      url: "http://bhj-diploma.u-w.me/user/register",
+      method: "POST",
+      body: data
+    };
+    let response = createRequest(testrequest, function(response){
+      User.setCurrent(response);
+      callback(response);
+    });
   }
 
   /**
@@ -53,15 +72,24 @@ class User {
    * сохранить пользователя через метод
    * User.setCurrent.
    * */
-  static register( data, callback = f => f ) {
-
+  static register(data, callback = f => f) {
+    let testrequest = {
+      url: "http://bhj-diploma.u-w.me/user/register",
+      method: "POST",
+      body: data,
+      mode: "corse",
+        };
+    let response = createRequest(testrequest, function(data){
+      console.log(data)
+      User.setCurrent(data);
+      callback(data);
+    });
   }
+
 
   /**
    * Производит выход из приложения. После успешного
    * выхода необходимо вызвать метод User.unsetCurrent
    * */
-  static logout( data, callback = f => f ) {
-
-  }
+  static logout(data, callback = f => f) {}
 }

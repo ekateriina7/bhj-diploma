@@ -11,7 +11,9 @@ class UserWidget {
    * необходимо выкинуть ошибку.
    * */
   constructor( element ) {
-
+    if(element) {
+      this.element = element;
+    } else console.error('element пустой');
   }
 
   /**
@@ -22,6 +24,9 @@ class UserWidget {
    * авторизованного пользователя
    * */
   update() {
-
+    let data = User.current();
+    if(data) {
+      document.querySelector('.user-name').innerText = data.name;
+    }
   }
 }

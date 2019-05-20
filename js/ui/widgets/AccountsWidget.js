@@ -13,7 +13,12 @@ class AccountsWidget {
    * необходимо выкинуть ошибку.
    * */
   constructor( element ) {
-
+    if(element) {
+      this.element = element;
+    } else {console.error('element пустой')};
+    this.registerEvents()
+    this.update()
+  
   }
 
   /**
@@ -24,6 +29,19 @@ class AccountsWidget {
    * вызывает AccountsWidget.onSelectAccount()
    * */
   registerEvents() {
+    const create_account = document.querySelector('.create-account');
+    
+    create_account.addEventListener('click', () => { 
+      let modal = App.getModal('createAccount');
+      modal.open();
+      
+    })
+    const accounts = document.querySelectorAll('.account');
+    for (let account of accounts) {
+      account.addEventListener('click', () => {
+        this.onSelectAccount(accounts[account])
+      })
+    }
 
   }
 
@@ -38,7 +56,15 @@ class AccountsWidget {
    * метода render()
    * */
   update() {
-
+    const user = User.current();
+    if(user) {
+      let accountsList = []
+      accountsList.push(Account.list(user));
+      for(let account of accountsList) {
+        //AccountsWidget.clear();
+        //AccountsWidget.render(accountsList[account]);
+      }
+    }
   }
 
   /**
@@ -55,6 +81,8 @@ class AccountsWidget {
    * в боковой колонке
    * */
   clear() {
+    const accounts = document.querySelectorAll('.account');
+
 
   }
 
