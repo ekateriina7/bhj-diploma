@@ -60,9 +60,9 @@ class User {
       method: "POST",
       body: data
     };
-    let response = createRequest(testrequest, function(response){
-      User.setCurrent(response);
-      callback(response);
+    let response = createRequest(testrequest, function(data){
+      User.setCurrent(data);
+      callback(data);
     });
   }
 
@@ -92,6 +92,6 @@ class User {
    * выхода необходимо вызвать метод User.unsetCurrent
    * */
   static logout(data, callback = f => f) {
-    
+    User.unsetCurrent()
   }
 }

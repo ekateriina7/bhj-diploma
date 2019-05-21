@@ -11,6 +11,12 @@ class TransactionsWidget {
    * необходимо выкинуть ошибку.
    * */
   constructor( element ) {
+    if(element) {
+      this.element = element;
+    } else {
+      console.log('error') 
+    };
+    this.registerEvents()
 
   }
   /**
@@ -20,6 +26,15 @@ class TransactionsWidget {
    * экземпляра окна
    * */
   registerEvents() {
-
+    const button_income = document.querySelector('.create-income-button');
+    button_income.addEventListener('click', () => {
+      let modal = App.getModal('newIncome');
+      modal.open()
+    })
+    const button_expense = document.querySelector('.create-expense-button');
+    button_expense.addEventListener('click', () => {
+      let modal = App.getModal('newExpense');
+      modal.open()
+    })
   }
 }

@@ -9,3 +9,4 @@ class Transaction extends Entity {
 		this.url = '/transaction';
 	}
 }
+//Entity.URL = '/transaction'

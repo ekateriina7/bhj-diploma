@@ -57,13 +57,12 @@ class AccountsWidget {
    * */
   update() {
     const user = User.current();
-    if(user) {
-      let accountsList = []
-      accountsList.push(Account.list(user));
-      for(let account of accountsList) {
-        //AccountsWidget.clear();
-        //AccountsWidget.render(accountsList[account]);
-      }
+    if(user != null ) {
+      let account = Account.list({},(accountsList) => {
+        console.log(accountsList);
+        this.clear();
+        this.render(accountsList.data);
+      });
     }
   }
 
@@ -72,7 +71,10 @@ class AccountsWidget {
    * метода renderItem
    * */
   render( data ) {
-
+    for (let element in data) {
+    let html_account = this.getAccountHTML(data[element])
+    this.renderItem(html_account);
+    }
   }
 
   /**
@@ -82,6 +84,9 @@ class AccountsWidget {
    * */
   clear() {
     const accounts = document.querySelectorAll('.account');
+    for(let i = 0; i < accounts.length; i++) {
+      accounts[i].remove();
+    }
 
 
   }
@@ -94,6 +99,11 @@ class AccountsWidget {
    * Вызывает App.showPage( 'transactions', { account_id: id_счёта });
    * */
   onSelectAccount( element ) {
+    if(element) {
+      element.classList.add('active');
+      this.element.classList.remove('active');
+      App.showPage( 'transactions', { account_id: id_счёта })
+    }
 
   }
 
@@ -103,7 +113,13 @@ class AccountsWidget {
    * item - объект с данными о счёте
    * */
   getAccountHTML( item ) {
-
+    let html = `<li class= "active account" data-id= ${item.id}>
+    <a href="#">
+        <span>${item.name}</span> /
+        <span>${item.sum} ₽</span>
+    </a>
+</li>`
+    return html;
   }
 
   /**
@@ -111,7 +127,9 @@ class AccountsWidget {
    * AccountsWidget.getAccountHTML HTML-код элемента
    * и добавляет его внутрь элемента виджета
    * */
-  renderItem( item ) {
-
+  renderItem(item) {
+    let account = document.querySelectorAll('.accounts-panel');
+    account[0].insertAdjacentHTML("beforeend", item)
+    console.log(item);
   }
 }

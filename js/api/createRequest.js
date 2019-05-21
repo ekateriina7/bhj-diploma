@@ -8,8 +8,8 @@ const createRequest = async function(options = {} , callback) {
   fetchrequest.method = options.method;
   fetchrequest.credentials = "include";
   if (options.hasOwnProperty("body")){
-    var form_data = new FormData();
-    for ( var key in options.body ) {
+    let form_data = new FormData();
+    for ( let key in options.body ) {
         form_data.append(key, options.body[key]);
     }
     fetchrequest.body = form_data;
