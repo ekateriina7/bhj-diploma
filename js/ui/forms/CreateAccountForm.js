@@ -19,7 +19,6 @@ class CreateAccountForm extends AsyncForm {
 	 const result = Account.create(data, (res) => {
 	 
 		let modal = App.getModal("createAccount");
-		console.log("response:" + JSON.stringify(res.account)); // response object cointains .accounts which cointain accounts returned from api
     modal.close();
 		App.update();
 

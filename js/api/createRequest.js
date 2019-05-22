@@ -18,14 +18,14 @@ const createRequest = async function(options = {} , callback) {
   fetchrequest.mode = "cors";
   
   
-  console.log(fetchrequest);
-  console.log(options.url);
+  console.log("fetchrequest" + fetchrequest);
+  console.log("options.url" + options.url);
   fetch(options.url, fetchrequest)
       .then(function(response) {
         return response.json()
       })
       .then(function(data) {
-        console.log(data);
+        console.log("data" + data);
         callback(data)
       })
       .catch(function(err) {

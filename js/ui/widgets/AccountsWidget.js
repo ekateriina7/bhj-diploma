@@ -15,7 +15,7 @@ class AccountsWidget {
   constructor( element ) {
     if(element) {
       this.element = element;
-    } else {console.error('element пустой')};
+    } else {console.log('error')};
     this.registerEvents()
     this.update()
   
@@ -36,12 +36,7 @@ class AccountsWidget {
       modal.open();
       
     })
-    const accounts = document.querySelectorAll('.account');
-    for (let account of accounts) {
-      account.addEventListener('click', () => {
-        this.onSelectAccount(accounts[account])
-      })
-    }
+ 
 
   }
 
@@ -60,8 +55,10 @@ class AccountsWidget {
     if(user != null ) {
       let account = Account.list({},(accountsList) => {
         console.log(accountsList);
+        //localStorage.setItem("accountslist", JSON.stringify(accountsList.data));
         this.clear();
         this.render(accountsList.data);
+        this.registerEvents();
       });
     }
   }
@@ -74,6 +71,7 @@ class AccountsWidget {
     for (let element in data) {
     let html_account = this.getAccountHTML(data[element])
     this.renderItem(html_account);
+
     }
   }
 
@@ -98,13 +96,15 @@ class AccountsWidget {
    * счёта класс .active.
    * Вызывает App.showPage( 'transactions', { account_id: id_счёта });
    * */
-  onSelectAccount( element ) {
+  onSelectAccount( element , id ) {
     if(element) {
+      let active_account = document.querySelectorAll('.active')
+      for (let active of active_account){
+        active.classList.remove('active');
+      }
       element.classList.add('active');
-      this.element.classList.remove('active');
-      App.showPage( 'transactions', { account_id: id_счёта })
+      App.showPage('transactions', id );
     }
-
   }
 
   /**
@@ -113,7 +113,7 @@ class AccountsWidget {
    * item - объект с данными о счёте
    * */
   getAccountHTML( item ) {
-    let html = `<li class= "active account" data-id= ${item.id}>
+    let html = `<li class= "account" data-id= ${item.id}>
     <a href="#">
         <span>${item.name}</span> /
         <span>${item.sum} ₽</span>
@@ -130,6 +130,10 @@ class AccountsWidget {
   renderItem(item) {
     let account = document.querySelectorAll('.accounts-panel');
     account[0].insertAdjacentHTML("beforeend", item)
-    console.log(item);
-  }
+    let childs = document.querySelectorAll('.account');
+    let last = childs[childs.length- 1];
+    last.addEventListener('click', () => {
+        this.onSelectAccount(last, item.id);
+      })
+    }
 }

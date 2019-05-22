@@ -14,7 +14,7 @@ class TransactionsPage {
     if(element) {
       this.element = element;
     } else {
-      console.error('error');
+      console.log('error');
     }
     this.registerEvents()
 
@@ -38,7 +38,7 @@ class TransactionsPage {
     const remove_transaction_button = document.querySelectorAll('.transaction__remove');
     const remove_account_button = document.querySelector('.remove-account');
     for (let button of remove_transaction_button) {
-      button.addEventListener('click', this.removeTransaction(button.dataset.id));
+      button.addEventListener('click', this.removeTransaction());
     }
     remove_account_button.addEventListener('click', this.removeAccount())
 
@@ -125,7 +125,19 @@ class TransactionsPage {
    * в формат «10 марта 2019 г. в 03:20»
    * */
   formatDate( date ) {
-    
+    const dat = new Date();
+    const monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня","июля", "августа", "сентября", "октября", "ноября", "декабря"];
+    const month = monthNames[dat.getMonth()];
+    const day = dat.getDate();
+    const year = dat.getFullYear();
+    const hours = dat.getHours();
+    const min = dat.getMinutes();
+    const add0 = (number) => {
+      if (number < 10) {
+        return '0' + number;
+       } return number
+    }
+    return `${day} ${month} ${year} в ${add0(hours)}:${add0(min)}`; 
 
   }
 

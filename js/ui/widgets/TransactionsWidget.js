@@ -30,6 +30,7 @@ class TransactionsWidget {
     button_income.addEventListener('click', () => {
       let modal = App.getModal('newIncome');
       modal.open()
+      
     })
     const button_expense = document.querySelector('.create-expense-button');
     button_expense.addEventListener('click', () => {
