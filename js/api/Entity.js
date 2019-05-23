@@ -12,7 +12,7 @@ class Entity {
    * */
   static list( data, callback = f => f ) {
     let options = data
-    options.url = Entity.HOST + Entity.URL
+    options.url = this.HOST + this.URL
     createRequest(options, callback);
   }
 
@@ -23,7 +23,7 @@ class Entity {
    * */
   static create( data, callback = f => f ) {
     let options = data
-    options.url = Entity.HOST + Entity.URL
+    options.url = this.HOST + this.URL
     createRequest(options, callback);
   }
 
@@ -33,7 +33,7 @@ class Entity {
    * */
   static get( id = '', data, callback = f => f ) {
     let options = data
-    options.url = Entity.HOST + Entity.URL+"/"+id
+    options.url = this.HOST + this.URL+"/"+id
     createRequest(options, callback);
 
   }
@@ -44,7 +44,7 @@ class Entity {
    * */
   static update( id = '', data, callback = f => f ) {
     let options = data
-    options.url = Entity.HOST + Entity.URL+"/"+id
+    options.url = this.HOST + this.URL+"/"+id
     createRequest(options, callback);
   }
 
@@ -54,7 +54,7 @@ class Entity {
    * */
   static remove( id = '', data, callback = f => f ) {
     let options = data
-    options.url = Entity.HOST + Entity.URL+"/"+id
+    options.url = this.HOST + this.URL+"/"+id
     createRequest(options, callback);
   }
 }

@@ -103,7 +103,8 @@ class AccountsWidget {
         active.classList.remove('active');
       }
       element.classList.add('active');
-      App.showPage('transactions', id );
+      App.showPage('transactions', {account_id: id} );
+      console.log('id id here' + {account_id: id})
     }
   }
 

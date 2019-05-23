@@ -16,16 +16,14 @@ class TransactionsPage {
     } else {
       console.log('error');
     }
-    this.registerEvents()
-
+    this.registerEvents();
   }
 
   /**
    * Вызывает метод render для отрисовки страницы
    * */
   update() {
-    this.render()
-
+    this.render();
   }
 
   /**
@@ -35,13 +33,18 @@ class TransactionsPage {
    * TransactionsPage.removeAccount соответственно
    * */
   registerEvents() {
-    const remove_transaction_button = document.querySelectorAll('.transaction__remove');
     const remove_account_button = document.querySelector('.remove-account');
-    for (let button of remove_transaction_button) {
-      button.addEventListener('click', this.removeTransaction());
-    }
-    remove_account_button.addEventListener('click', this.removeAccount())
+    remove_account_button.addEventListener('click', () => {
+      this.removeAccount();
+    });
 
+    const transaction_remove_button = document.querySelectorAll('.transaction__remove');
+
+    for(let button of transaction_remove_button) {
+      button.addEventListener('click', () => {
+        this.removeTransaction(button.dataset.id);
+      })
+    }
   }
 
   /**
@@ -53,15 +56,15 @@ class TransactionsPage {
    * для обновления приложения
    * */
   removeAccount() {
-    if(this.lastOptions) {
-      confirm ('Вы действительно хотите удалить счёт?');
-      if (confirm === true) {
-        Account.remove();
-        this.clear();
-        App.update()
-      }
-      
+    if(!this.lastOptions) {
+      return
     }
+    if (confirm( 'Вы действительно хотите удалить счёт?' )) {
+    this.clear();
+    Account.remove( id, {}, () => App.update());
+    }
+    
+  
   }
 
   /**
@@ -70,11 +73,11 @@ class TransactionsPage {
    * По удалению транзакции вызовите метод App.update()
    * */
   removeTransaction( id ) {
-    if(confirm('Вы действительно хотите удалить эту транзакцию?')) {
+    if (confirm( 'Вы действительно хотите удалить счёт?' )) {
       Transaction.remove(id);
-      App.update()
+      App.update();
     }
-
+    
   }
 
   /**
@@ -83,22 +86,14 @@ class TransactionsPage {
    * Получает список Transaction.list и полученные данные передаёт
    * в TransactionsPage.renderTransactions()
    * */
-  render( options ) {
-    if(options) {
-      this.options = lastOptions;
-      const data = Account.get();
-      const list = Transaction.list({}, (err, res) => {
-        if(res) {
-          this.renderTransactions();
-        }
-      });
-      if(data) {
-        this.renderTitle(data.name);
+    render( options ) {
+      if(! options) {
+        console.log('error');
+        return;
       }
+      this.lastOptions = options;
     }
-
-
-  }
+  
 
   /**
    * Очищает страницу. Вызывает
@@ -106,18 +101,15 @@ class TransactionsPage {
    * Устанавливает заголовок: «Название счёта»
    * */
   clear() {
-    //this.renderTransaction([]);
-    this.renderTitle('Название счёта')
-
+    this.renderTransactions({});
+    this.renderTitle('Название счёта');
   }
 
   /**
    * Устанавливает заголовок в элемент .content-title
    * */
   renderTitle( name ) {
-    const content_title = document.querySelector('.content-title');
-    content_title.innerHTML = name;
-
+    document.querySelector('.content-title').innerText = name;
   }
 
   /**
@@ -125,20 +117,7 @@ class TransactionsPage {
    * в формат «10 марта 2019 г. в 03:20»
    * */
   formatDate( date ) {
-    const dat = new Date();
-    const monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня","июля", "августа", "сентября", "октября", "ноября", "декабря"];
-    const month = monthNames[dat.getMonth()];
-    const day = dat.getDate();
-    const year = dat.getFullYear();
-    const hours = dat.getHours();
-    const min = dat.getMinutes();
-    const add0 = (number) => {
-      if (number < 10) {
-        return '0' + number;
-       } return number
-    }
-    return `${day} ${month} ${year} в ${add0(hours)}:${add0(min)}`; 
-
+    
   }
 
   /**

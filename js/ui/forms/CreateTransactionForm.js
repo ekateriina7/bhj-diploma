@@ -48,6 +48,22 @@ class CreateTransactionForm extends AsyncForm{
    * в котором находится форма
    * */
   onSubmit( options ) {
+  let data = {};
+	data.body = options;
+	//data.method = options._method;
+  data.method = "POST";
+  
+	 const result = Transaction.create(data, (res) => {
     
-}
+    let modalInc = App.getModal('newIncome');
+    
+    modalInc.close();
+    let modalExp = App.getModal('newExpense');
+    
+    modalExp.close();
+    
+		App.update();
+
+	 }); 
+	}
 }
