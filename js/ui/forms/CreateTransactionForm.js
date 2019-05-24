@@ -62,7 +62,8 @@ class CreateTransactionForm extends AsyncForm{
     
     modalExp.close();
     
-		App.update();
+    App.update();
+    console.log(res)
 
 	 }); 
 	}

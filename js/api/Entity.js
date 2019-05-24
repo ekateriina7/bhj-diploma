@@ -12,6 +12,7 @@ class Entity {
    * */
   static list( data, callback = f => f ) {
     let options = data
+   
     options.url = this.HOST + this.URL
     createRequest(options, callback);
   }
@@ -23,6 +24,7 @@ class Entity {
    * */
   static create( data, callback = f => f ) {
     let options = data
+    data = Object.assign({ _method: 'PUT' }, data )
     options.url = this.HOST + this.URL
     createRequest(options, callback);
   }
@@ -54,6 +56,7 @@ class Entity {
    * */
   static remove( id = '', data, callback = f => f ) {
     let options = data
+    options.method = "DELETE"
     options.url = this.HOST + this.URL+"/"+id
     createRequest(options, callback);
   }

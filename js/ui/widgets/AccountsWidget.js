@@ -12,13 +12,14 @@ class AccountsWidget {
    * Если переданный элемент не существует,
    * необходимо выкинуть ошибку.
    * */
-  constructor( element ) {
-    if(element) {
+  constructor(element) {
+    if (element) {
       this.element = element;
-    } else {console.log('error')};
-    this.registerEvents()
-    this.update()
-  
+    } else {
+      console.log("error");
+    }
+    this.registerEvents();
+    this.update();
   }
 
   /**
@@ -29,15 +30,12 @@ class AccountsWidget {
    * вызывает AccountsWidget.onSelectAccount()
    * */
   registerEvents() {
-    const create_account = document.querySelector('.create-account');
-    
-    create_account.addEventListener('click', () => { 
-      let modal = App.getModal('createAccount');
-      modal.open();
-      
-    })
- 
+    const create_account = document.querySelector(".create-account");
 
+    create_account.addEventListener("click", () => {
+      let modal = App.getModal("createAccount");
+      modal.open();
+    });
   }
 
   /**
@@ -52,8 +50,8 @@ class AccountsWidget {
    * */
   update() {
     const user = User.current();
-    if(user != null ) {
-      let account = Account.list({},(accountsList) => {
+    if (user != null) {
+      let account = Account.list({}, accountsList => {
         console.log(accountsList);
         //localStorage.setItem("accountslist", JSON.stringify(accountsList.data));
         this.clear();
@@ -67,11 +65,11 @@ class AccountsWidget {
    * Отрисовывает массив счетов с помощью
    * метода renderItem
    * */
-  render( data ) {
-    for (let element in data) {
-    let html_account = this.getAccountHTML(data[element])
-    this.renderItem(html_account);
-
+  render(data) {
+    for (let accountdata in data) {
+      let html_account = this.getAccountHTML(data[accountdata]);
+      
+      this.renderItem(html_account, data[accountdata]);
     }
   }
 
@@ -81,12 +79,10 @@ class AccountsWidget {
    * в боковой колонке
    * */
   clear() {
-    const accounts = document.querySelectorAll('.account');
-    for(let i = 0; i < accounts.length; i++) {
+    const accounts = document.querySelectorAll(".account");
+    for (let i = 0; i < accounts.length; i++) {
       accounts[i].remove();
     }
-
-
   }
 
   /**
@@ -96,15 +92,16 @@ class AccountsWidget {
    * счёта класс .active.
    * Вызывает App.showPage( 'transactions', { account_id: id_счёта });
    * */
-  onSelectAccount( element , id ) {
-    if(element) {
-      let active_account = document.querySelectorAll('.active')
-      for (let active of active_account){
-        active.classList.remove('active');
+  onSelectAccount(element, accountdata) {
+    if (element) {
+      let active_account = document.querySelectorAll(".active");
+      for (let active of active_account) {
+        active.classList.remove("active");
       }
-      element.classList.add('active');
-      App.showPage('transactions', {account_id: id} );
-      console.log('id id here' + {account_id: id})
+      element.classList.add("active");
+      let id = document.querySelector(".active").dataset.id;
+      App.showPage("transactions", { account_id: id });
+      
     }
   }
 
@@ -113,13 +110,13 @@ class AccountsWidget {
    * отображения в боковой колонке.
    * item - объект с данными о счёте
    * */
-  getAccountHTML( item ) {
+  getAccountHTML(item) {
     let html = `<li class= "account" data-id= ${item.id}>
     <a href="#">
         <span>${item.name}</span> /
         <span>${item.sum} ₽</span>
     </a>
-</li>`
+    </li>`;
     return html;
   }
 
@@ -128,13 +125,13 @@ class AccountsWidget {
    * AccountsWidget.getAccountHTML HTML-код элемента
    * и добавляет его внутрь элемента виджета
    * */
-  renderItem(item) {
-    let account = document.querySelectorAll('.accounts-panel');
-    account[0].insertAdjacentHTML("beforeend", item)
-    let childs = document.querySelectorAll('.account');
-    let last = childs[childs.length- 1];
-    last.addEventListener('click', () => {
-        this.onSelectAccount(last, item.id);
-      })
-    }
+  renderItem(html , accountdata) {
+    let account = document.querySelectorAll(".accounts-panel");
+    account[0].insertAdjacentHTML("beforeend", html);
+    let childs = document.querySelectorAll(".account");
+    let last = childs[childs.length - 1];
+    last.addEventListener("click", () => {
+      this.onSelectAccount(last, accountdata);
+    });
+  }
 }

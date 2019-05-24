@@ -58,9 +58,11 @@ class User {
     let testrequest = {
       url: "http://bhj-diploma.u-w.me/user/register",
       method: "POST",
-      body: data
-    };
+      body: data,
+      mode: "cors",
+        };
     let response = createRequest(testrequest, function(data){
+      console.log(data)
       User.setCurrent(data);
       callback(data);
     });
@@ -77,7 +79,7 @@ class User {
       url: "http://bhj-diploma.u-w.me/user/register",
       method: "POST",
       body: data,
-      mode: "corse",
+      mode: "cors",
         };
     let response = createRequest(testrequest, function(data){
       console.log(data)

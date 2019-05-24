@@ -23,7 +23,7 @@ class TransactionsPage {
    * Вызывает метод render для отрисовки страницы
    * */
   update() {
-    this.render();
+    this.render(this.lastOptions );
   }
 
   /**
@@ -61,7 +61,8 @@ class TransactionsPage {
     }
     if (confirm( 'Вы действительно хотите удалить счёт?' )) {
     this.clear();
-    Account.remove( id, {}, () => App.update());
+    let id = document.querySelector('.active').dataset.id
+    Account.remove( id, {_method: "DELETE"}, () => App.update());
     }
     
   
@@ -92,6 +93,19 @@ class TransactionsPage {
         return;
       }
       this.lastOptions = options;
+      let id = document.querySelector('.active').dataset.id
+      Account.get( id, {}, ( response ) => {
+            this.renderTitle(response.account.name);
+            Transaction.list(options, (response) => {
+    
+    
+              console.log(response)
+          
+             }); 
+
+
+      });
+      
     }
   
 
@@ -117,15 +131,54 @@ class TransactionsPage {
    * в формат «10 марта 2019 г. в 03:20»
    * */
   formatDate( date ) {
-    
-  }
+    //const date = new Date();
+const monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня",
+  "июля", "августа", "сентября", "октября", "ноября", "декабря"
+];
+const month = monthNames[date.getMonth()];
+const day = date.getDate();
+const year = date.getFullYear();
+const hours = date.getHours();
+const min = date.getMinutes();
+const add0 = (number) => {
+  if (number < 10) {
+    return '0' + number
+  } return number
+}
+return `${day} ${month} ${year} в ${add0(hours)}:${add0(min)}`;
+
+}
 
   /**
    * Формирует HTML-код транзакции (дохода или расхода).
    * item - объект с информацией о транзакции
    * */
+  
   getTransactionHTML( item ) {
-
+    
+    return `
+      <div class="transaction transaction_row">
+          <div class="col-md-7 transaction__details">
+              <div class="transaction__icon">
+                  <span class="fa fa-money fa-2x"></span>
+              </div>
+              <div class="transaction__info">
+                  <h4 class="transaction__title"></h4>
+                  <div class="transaction__date"></div>
+              </div>
+          </div>
+          <div class="col-md-3">
+              <div class="transaction__summ">
+                   <span class="currency">₽</span>
+              </div>
+          </div>
+          <div class="col-md-2 transaction__controls">
+              <button class="btn btn-danger transaction__remove" data-id="">
+                <i class="fa fa-trash"></i>  
+              </button>
+          </div>
+      </div>
+    `;
   }
 
   /**
@@ -133,6 +186,5 @@ class TransactionsPage {
    * используя getTransactionHTML
    * */
   renderTransactions( data ) {
-
   }
 }
