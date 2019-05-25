@@ -11,12 +11,14 @@ class Entity {
    * (в зависимости от того, что наследуется от Entity)
    * */
   static list( data, callback = f => f ) {
-    let options = data
    
+    let body = Object.assign({ _method: 'GET' }, data );
+let options = {}   
+ options.method ="POST"
+   options.body = body
     options.url = this.HOST + this.URL
     createRequest(options, callback);
   }
-
   /**
    * Создаёт счёт или доход/расход с помощью запроса
    * на сервер. (в зависимости от того,

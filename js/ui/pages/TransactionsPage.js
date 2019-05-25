@@ -33,19 +33,20 @@ class TransactionsPage {
    * TransactionsPage.removeAccount соответственно
    * */
   registerEvents() {
-    const remove_account_button = document.querySelector('.remove-account');
-    remove_account_button.addEventListener('click', () => {
-      this.removeAccount();
+    this.element.addEventListener( 'click', e => {
+      const transaction__remove = e.target.closest( '.transaction__remove' );
+      if (transaction__remove) {
+        const { id } = transaction__remove.dataset;
+
+        this.removeTransaction( id );
+      }
+      const remove_account = e.target.closest( '.remove-account' );
+      if (remove_account) {
+        this.removeAccount()
+      }
     });
-
-    const transaction_remove_button = document.querySelectorAll('.transaction__remove');
-
-    for(let button of transaction_remove_button) {
-      button.addEventListener('click', () => {
-        this.removeTransaction(button.dataset.id);
-      })
-    }
   }
+
 
   /**
    * Удаляет счёт. Необходимо показать диаголовое окно (с помощью confirm())
@@ -75,8 +76,7 @@ class TransactionsPage {
    * */
   removeTransaction( id ) {
     if (confirm( 'Вы действительно хотите удалить счёт?' )) {
-      Transaction.remove(id);
-      App.update();
+      Transaction.remove( id, {}, () => App.update());
     }
     
   }
@@ -97,7 +97,11 @@ class TransactionsPage {
       Account.get( id, {}, ( response ) => {
             this.renderTitle(response.account.name);
             Transaction.list(options, (response) => {
-    
+              let data = {};
+              data.body = options
+              options._method = "GET" 
+              data.method = "POST"
+              this.renderTransactions(response.data)
     
               console.log(response)
           
@@ -115,8 +119,9 @@ class TransactionsPage {
    * Устанавливает заголовок: «Название счёта»
    * */
   clear() {
-    this.renderTransactions({});
-    this.renderTitle('Название счёта');
+    this.renderTransactions([]);
+    this.renderTitle( 'Название счёта' );
+    this.lastOptions = null;
   }
 
   /**
@@ -131,23 +136,22 @@ class TransactionsPage {
    * в формат «10 марта 2019 г. в 03:20»
    * */
   formatDate( date ) {
-    //const date = new Date();
-const monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня",
-  "июля", "августа", "сентября", "октября", "ноября", "декабря"
-];
-const month = monthNames[date.getMonth()];
-const day = date.getDate();
-const year = date.getFullYear();
-const hours = date.getHours();
-const min = date.getMinutes();
-const add0 = (number) => {
-  if (number < 10) {
-    return '0' + number
-  } return number
-}
-return `${day} ${month} ${year} в ${add0(hours)}:${add0(min)}`;
+    const d = new Date( date.replace( ' ', 'T' )),
+      
+      months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],
+      month = months[d.getMonth()],
+      day = d.getDate(),
+      year = d.getFullYear(),
+      hours = d.getHours(),
+      minutes = d.getMinutes();
+      const add0 = (number) => {
+        if (number < 10) {
+          return '0' + number
+        } return number
+      }
 
-}
+    return `${day} ${month} ${year} г. в ${add0(hours)}:${add0(minutes)}`;
+  }
 
   /**
    * Формирует HTML-код транзакции (дохода или расхода).
@@ -155,25 +159,27 @@ return `${day} ${month} ${year} в ${add0(hours)}:${add0(min)}`;
    * */
   
   getTransactionHTML( item ) {
-    
+    const { type, name, id, sum } = item,
+      date = this.formatDate( item.created_at );
+      
     return `
-      <div class="transaction transaction_row">
+      <div class="transaction transaction_${type.toLowerCase()} row">
           <div class="col-md-7 transaction__details">
               <div class="transaction__icon">
                   <span class="fa fa-money fa-2x"></span>
               </div>
               <div class="transaction__info">
-                  <h4 class="transaction__title"></h4>
-                  <div class="transaction__date"></div>
+                  <h4 class="transaction__title">${name}</h4>
+                  <div class="transaction__date">${date}</div>
               </div>
           </div>
           <div class="col-md-3">
               <div class="transaction__summ">
-                   <span class="currency">₽</span>
+                  ${sum} <span class="currency">₽</span>
               </div>
           </div>
           <div class="col-md-2 transaction__controls">
-              <button class="btn btn-danger transaction__remove" data-id="">
+              <button class="btn btn-danger transaction__remove" data-id="${id}">
                 <i class="fa fa-trash"></i>  
               </button>
           </div>
@@ -186,5 +192,11 @@ return `${day} ${month} ${year} в ${add0(hours)}:${add0(min)}`;
    * используя getTransactionHTML
    * */
   renderTransactions( data ) {
+    const container = document.querySelector( '.content' );
+      let itemsHTML = data.reverse()
+        .map( this.getTransactionHTML.bind( this ))
+        .join( '' );
+
+    container.innerHTML = `<div class="transactions-content">${itemsHTML}</div>`
   }
 }
