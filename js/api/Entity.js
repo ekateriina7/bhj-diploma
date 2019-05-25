@@ -12,7 +12,7 @@ class Entity {
    * */
   static list( data, callback = f => f ) {
    
-    let body = Object.assign({ _method: 'GET' }, data );
+  let body = Object.assign({ _method: 'GET' }, data );
 let options = {}   
  options.method ="POST"
    options.body = body

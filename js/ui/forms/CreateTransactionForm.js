@@ -24,7 +24,8 @@ class CreateTransactionForm extends AsyncForm{
    * Обновляет в форме всплывающего окна выпадающий список
    * */
   renderAccountsList() {
-    let account = Account.list({},(accountsList) => {
+    let account = Account.list({_method: "GET"},(accountsList) => {
+      
       console.log(accountsList.data);
       for (let i = 0; i < accountsList.data.length; i++){
         let data = accountsList.data[i]

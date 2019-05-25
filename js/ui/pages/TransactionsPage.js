@@ -63,6 +63,7 @@ class TransactionsPage {
     if (confirm( 'Вы действительно хотите удалить счёт?' )) {
     this.clear();
     let id = document.querySelector('.active').dataset.id
+    
     Account.remove( id, {_method: "DELETE"}, () => App.update());
     }
     
